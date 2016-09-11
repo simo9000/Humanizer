@@ -24,8 +24,7 @@
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.0.0",
-          "type": "platform"
+          "version": "1.0.0"
         }
       },
       "buildOptions": {
@@ -34,7 +33,7 @@
     },
     "net46": {
       "dependencies": {
-          
+
       },
       "frameworkAssemblies": {
         "System.ComponentModel.DataAnnotations": ""

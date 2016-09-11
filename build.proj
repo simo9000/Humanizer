@@ -3,23 +3,19 @@
   <!--Project configuration-->
   <PropertyGroup>
     <XUnitPath>$(MSBuildThisFileDirectory)packages\xunit.runner.msbuild\build\portable-net45+win8+wp8+wpa81</XUnitPath>
-    <CodeTaskAssembly Condition="'$(MSBuildAssemblyVersion)' == ''">$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll</CodeTaskAssembly>
-    <!-- In VS2013, the assembly contains the VS version. -->
-    <CodeTaskAssembly Condition="'$(MSBuildAssemblyVersion)' == '12.0'">$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll</CodeTaskAssembly>
-    <!-- In VS2015+, the assembly was renamed -->
-    <CodeTaskAssembly Condition="'$(MSBuildAssemblyVersion)' != '' and '$(MSBuildAssemblyVersion)' &gt;= '14.0'">$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll</CodeTaskAssembly>
+    <CodeTaskAssembly>$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll</CodeTaskAssembly>
   </PropertyGroup>
   <ItemGroup>
     <ProjectToBuild Include="Src\*.sln" />
   </ItemGroup>
-  <!-- Expand build output files AFTER the build has run. 
+  <!-- Expand build output files AFTER the build has run.
        Note that the Build Task MUST BE defined by the file that includes this file. -->
   <Target Name="GetTestAssemblies" DependsOnTargets="Build">
     <ItemGroup>
       <TestAssemblies Include="**\bin\Release\*.Tests.dll" />
     </ItemGroup>
   </Target>
-  
+
   <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.dll" />
 
   <!--Clean-->
@@ -41,7 +37,7 @@
     <xunit Assemblies="@(TestAssemblies)" />
   </Target>
 
-  
+
   <!--Nuget restore-->
   <ItemGroup>
     <Solution Include="$(MSBuildThisFileDirectory)src\*.sln" />
@@ -49,10 +45,10 @@
 
   <Target Name="RestorePackages" DependsOnTargets="_DownloadNuGet">
     <Exec Command="&quot;$(MSBuildThisFileDirectory)tools\NuGet\NuGet.exe&quot; install xunit.runner.msbuild -SolutionDir &quot;$(MSBuildProjectDirectory)&quot; -Verbosity quiet -ExcludeVersion" Condition="!Exists('$(MSBuildThisFileDirectory)packages\xunit.runner.msbuild\')" />
-    
+
     <Exec Command="&quot;$(MSBuildThisFileDirectory)tools\NuGet\NuGet.exe&quot; restore &quot;%(Solution.Identity)&quot;" />
   </Target>
- 
+
   <Target Name="_DownloadNuGet">
     <MakeDir Directories="$(MSBuildThisFileDirectory)tools\NuGet" />
     <DownloadNuGet OutputFilename="$(MSBuildThisFileDirectory)tools\NuGet\nuget.exe" Condition="!Exists('$(MSBuildThisFileDirectory)tools\NuGet\nuget.exe')" />
